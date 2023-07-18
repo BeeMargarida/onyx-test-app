@@ -1,6 +1,18 @@
 import {AppRegistry} from 'react-native';
+import Onyx from 'react-native-onyx';
+
 import App from './App';
 import appConfig from './app.json';
+import ONYXKEYS from './keys';
+
+const config = {
+  keys: ONYXKEYS,
+  initialKeyStates: {
+    [ONYXKEYS.COUNTER]: undefined,
+  },
+};
+
+Onyx.init(config);
 
 AppRegistry.registerComponent(appConfig.name, () => App);
 AppRegistry.runApplication(appConfig.name, {
