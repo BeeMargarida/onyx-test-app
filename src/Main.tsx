@@ -25,7 +25,7 @@ function Main(props: {counter: number; session: {login: string}}): JSX.Element {
         {props.session?.login ? (
           <View>
             <Text>{props.session.login}</Text>
-            <Button title="Log out" onPress={onLogOut} />
+            <Button title="Log Out" onPress={onLogOut} />
             <Counter />
           </View>
         ) : (
