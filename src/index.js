@@ -7,9 +7,6 @@ import ONYXKEYS from './keys';
 
 const config = {
   keys: ONYXKEYS,
-  initialKeyStates: {
-    [ONYXKEYS.COUNTER]: undefined,
-  },
 };
 
 Onyx.init(config);
