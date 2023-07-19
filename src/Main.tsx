@@ -38,7 +38,7 @@ function Main(props: {counter: number; session: {login: string}}): JSX.Element {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
   },
