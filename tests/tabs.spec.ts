@@ -30,15 +30,20 @@ test.describe('multiple tabs', () => {
     await expect(logOutButtonFirstPage).toBeTruthy();
     await expect(logOutButtonSecondPage).toBeTruthy();
 
-    const fetchButton = page.getByText('Fetch Hello');
-    await Promise.all([logOutButtonSecondPage.click(), fetchButton.click()]);
+    const fetchPokedexButtonFirstPage = page.getByText('Fetch Pokedex');
 
-    const fetchData = page.getByText('HELLO');
+    await Promise.all([
+      logOutButtonSecondPage.click(),
+      fetchPokedexButtonFirstPage.click(),
+    ]);
+
     logInButton = page.getByText('Log In');
-
     expect(logInButton).toBeTruthy();
 
-    // Should fail in the current state
-    // expect(fetchData).toBeFalsy();
+    await page.reload();
+
+    // This sometimes fails
+    const fetchPokedexData = page.getByLabel('data-pokedex');
+    expect(fetchPokedexData).toBeEmpty();
   });
 });

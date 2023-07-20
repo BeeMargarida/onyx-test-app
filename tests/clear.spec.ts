@@ -18,18 +18,15 @@ test.describe('clear', () => {
     const fetchMeteoritesButton = page.getByText('Fetch Space Data');
     expect(fetchMeteoritesButton).toBeTruthy();
 
-    await Promise.all([
-      fetchPokedexButton.click(),
-      fetchMeteoritesButton.click(),
-    ]);
-
+    await fetchPokedexButton.click();
     const fetchPokedexData = page.getByLabel('data-pokedex');
     expect(fetchPokedexData).toContainText('151');
 
-    const fetchMeteoritesData = page.getByLabel('data-meteorites');
+    await fetchMeteoritesButton.click();
+    let fetchMeteoritesData = page.getByLabel('data-meteorites');
     expect(fetchMeteoritesData).not.toBeEmpty();
 
-    const fetchAsteroidsData = page.getByLabel('data-asteroids');
+    let fetchAsteroidsData = page.getByLabel('data-asteroids');
     expect(fetchAsteroidsData).not.toBeEmpty();
 
     await logOutButton.click();
@@ -38,6 +35,13 @@ test.describe('clear', () => {
     expect(fetchMeteoritesData).toBeEmpty();
     expect(fetchAsteroidsData).toBeEmpty();
 
-    // TODO: check indexedDB contents
+    await page.reload();
+
+    // This will fail
+    fetchMeteoritesData = page.getByLabel('data-meteorites');
+    expect(fetchMeteoritesData).not.toBeEmpty();
+
+    fetchAsteroidsData = page.getByLabel('data-asteroids');
+    expect(fetchAsteroidsData).not.toBeEmpty();
   });
 });
