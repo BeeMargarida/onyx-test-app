@@ -7,7 +7,9 @@ import Fetch from './Fetch';
 function Main(props: {
   counter: number;
   session: {login: string};
-  data: string;
+  pokedex: {pokemon: Array<unknown>};
+  allMeteorites: {[key: string]: Array<unknown>};
+  allAsteroids: {[key: string]: Array<unknown>};
 }): JSX.Element {
   const onLogIn = () => {
     Onyx.merge(ONYXKEYS.SESSION, {login: 'test@test.com'});
@@ -29,7 +31,23 @@ function Main(props: {
         ) : (
           <Button title="Log In" onPress={onLogIn} />
         )}
-        <Text aria-label="data">{props.data}</Text>
+        <Text aria-label="data-pokedex">{props.pokedex?.pokemon.length}</Text>
+        <Text aria-label="data-meteorites">
+          {Object.entries(props.allMeteorites ?? {})
+            .map(([key, value]) =>
+              value ? `${key}-${value?.length}` : undefined,
+            )
+            .filter(v => !!v)
+            .join(',')}
+        </Text>
+        <Text aria-label="data-asteroids">
+          {Object.entries(props.allAsteroids ?? {})
+            .map(([key, value]) =>
+              value ? `${key}-${value?.length}` : undefined,
+            )
+            .filter(v => !!v)
+            .join(',')}
+        </Text>
       </View>
     </SafeAreaView>
   );
@@ -40,6 +58,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
+    rowGap: 20,
   },
 });
 
@@ -50,7 +69,13 @@ export default withOnyx({
   counter: {
     key: ONYXKEYS.COUNTER,
   },
-  data: {
-    key: ONYXKEYS.DATA,
+  pokedex: {
+    key: ONYXKEYS.POKEDEX,
+  },
+  allMeteorites: {
+    key: ONYXKEYS.COLLECTION.METEORITES,
+  },
+  allAsteroids: {
+    key: ONYXKEYS.COLLECTION.ASTEROIDS,
   },
 })(Main);
