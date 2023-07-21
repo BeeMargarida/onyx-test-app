@@ -37,13 +37,14 @@ test.describe('multiple tabs', () => {
     await expect(logOutButtonSecondPage).toBeTruthy();
     await expect(logOutButtonThirdPage).toBeTruthy();
 
-    const fetchPokedexButtonFirstPage = page.getByText('Fetch Pokedex');
-    const fetchPokedexButtonThirdPage = thirdPage.getByText('Fetch Pokedex');
+    const fetchSpaceDataButtonFirstPage = page.getByText('Fetch Spade Data');
+    const fetchSpaceDataButtonThirdPage =
+      thirdPage.getByText('Fetch Space Data');
 
     await Promise.all([
       logOutButtonSecondPage.click(),
-      fetchPokedexButtonFirstPage.click(),
-      fetchPokedexButtonThirdPage.click(),
+      fetchSpaceDataButtonFirstPage.click(),
+      fetchSpaceDataButtonThirdPage.click(),
     ]);
 
     logInButton = page.getByText('Log In');
@@ -52,9 +53,9 @@ test.describe('multiple tabs', () => {
     await Promise.all([page.reload(), thirdPage.reload()]);
 
     // This sometimes fails
-    const fetchPokedexDataFirstPage = page.getByLabel('data-pokedex');
-    const fetchPokedexDataThirdPage = thirdPage.getByLabel('data-pokedex');
-    expect(fetchPokedexDataFirstPage).toBeEmpty();
-    expect(fetchPokedexDataThirdPage).toBeEmpty();
+    const fetchSpaceDataFirstPage = page.getByLabel('data-meteorites');
+    const fetchSpaceDataThirdPage = thirdPage.getByLabel('data-meteorites');
+    expect(fetchSpaceDataFirstPage).toBeEmpty();
+    expect(fetchSpaceDataThirdPage).toBeEmpty();
   });
 });
