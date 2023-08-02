@@ -1,18 +1,27 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 import {Button, SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import lodashGet from 'lodash/get';
 import Onyx, {withOnyx} from 'react-native-onyx';
 import ONYXKEYS from './keys';
 import Fetch from './Fetch';
+import {updates, clear} from './lib/updates';
 
 function Main(props: {
-  counter: number;
   session: {login: string};
   pokedex: {pokemon: Array<unknown>};
+  randomNumber: {number: number};
   allMeteorites: {[key: string]: Array<unknown>};
   allAsteroids: {[key: string]: Array<unknown>};
 }): JSX.Element {
+  const isAuthenticated = useMemo(
+    () => Boolean(lodashGet(props.session, 'login', null)),
+    [props.session],
+  );
+
   const onLogIn = () => {
+    clear();
     Onyx.merge(ONYXKEYS.SESSION, {login: 'test@test.com'});
+    Onyx.merge(ONYXKEYS.RANDOM_NUMBER, {number: Date.now()});
   };
 
   const onLogOut = () => {
@@ -22,8 +31,8 @@ function Main(props: {
   return (
     <SafeAreaView>
       <View style={styles.container}>
-        {props.session?.login ? (
-          <View>
+        {isAuthenticated ? (
+          <View style={styles.container}>
             <Text>{props.session.login}</Text>
             <Button title="Log Out" onPress={onLogOut} />
             <Fetch />
@@ -48,6 +57,10 @@ function Main(props: {
             .filter(v => !!v)
             .join(',')}
         </Text>
+        <Text aria-label="data-updates" key={updates.length}>
+          {JSON.stringify(updates)}
+        </Text>
+        <Button title="Clear updates" onPress={clear} />
       </View>
     </SafeAreaView>
   );
@@ -66,11 +79,11 @@ export default withOnyx({
   session: {
     key: ONYXKEYS.SESSION,
   },
-  counter: {
-    key: ONYXKEYS.COUNTER,
-  },
   pokedex: {
     key: ONYXKEYS.POKEDEX,
+  },
+  randomNumber: {
+    key: ONYXKEYS.RANDOM_NUMBER,
   },
   allMeteorites: {
     key: ONYXKEYS.COLLECTION.METEORITES,

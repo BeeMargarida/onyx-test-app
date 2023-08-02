@@ -27,10 +27,10 @@ function Fetch(): JSX.Element {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'column',
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    rowGap: 10,
+    columnGap: 10,
   },
 });
 

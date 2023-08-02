@@ -6,6 +6,7 @@ const ONYXKEYS = {
     METEORITES: 'meteorites_',
     ASTEROIDS: 'asteroids_',
   },
+  RANDOM_NUMBER: 'randomNumber',
 };
 
 export default ONYXKEYS;
