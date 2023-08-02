@@ -3,8 +3,8 @@ import {Button, SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import lodashGet from 'lodash/get';
 import Onyx, {withOnyx} from 'react-native-onyx';
 import ONYXKEYS from './keys';
-import Fetch from './Fetch';
 import {updates, clear} from './lib/updates';
+import {pokedex, meteorites, asteroids} from './data';
 
 function Main(props: {
   session: {login: string};
@@ -28,6 +28,18 @@ function Main(props: {
     Onyx.clear([]);
   };
 
+  const onFetchPokedex = () => {
+    Onyx.merge(ONYXKEYS.POKEDEX, pokedex);
+  };
+
+  const onFetchSpaceData = (small?: boolean) => {
+    const date = Date.now();
+    for (let i = 0; i <= (small ? 10 : 100); i++) {
+      Onyx.merge(`${ONYXKEYS.COLLECTION.METEORITES}${date}${i}`, meteorites);
+      Onyx.merge(`${ONYXKEYS.COLLECTION.ASTEROIDS}${date}${i}`, asteroids);
+    }
+  };
+
   return (
     <SafeAreaView>
       <View style={styles.container}>
@@ -35,13 +47,23 @@ function Main(props: {
           <View style={styles.container}>
             <Text>{props.session.login}</Text>
             <Button title="Log Out" onPress={onLogOut} />
-            <Fetch />
+            <View style={styles.containerButtons}>
+              <Button title="Fetch Pokedex" onPress={onFetchPokedex} />
+              <Button
+                title="Fetch Space data"
+                onPress={() => onFetchSpaceData(false)}
+              />
+              <Button
+                title="Fetch Space data (small)"
+                onPress={() => onFetchSpaceData(true)}
+              />
+            </View>
           </View>
         ) : (
           <Button title="Log In" onPress={onLogIn} />
         )}
         <Text aria-label="data-pokedex">{props.pokedex?.pokemon.length}</Text>
-        <Text aria-label="data-meteorites">
+        <Text aria-label="data-meteorites" numberOfLines={10}>
           {Object.entries(props.allMeteorites ?? {})
             .map(([key, value]) =>
               value ? `${key}-${value?.length}` : undefined,
@@ -49,7 +71,7 @@ function Main(props: {
             .filter(v => !!v)
             .join(',')}
         </Text>
-        <Text aria-label="data-asteroids">
+        <Text aria-label="data-asteroids" numberOfLines={10}>
           {Object.entries(props.allAsteroids ?? {})
             .map(([key, value]) =>
               value ? `${key}-${value?.length}` : undefined,
@@ -57,7 +79,7 @@ function Main(props: {
             .filter(v => !!v)
             .join(',')}
         </Text>
-        <Text aria-label="data-updates" key={updates.length}>
+        <Text aria-label="data-updates" key={updates.length} numberOfLines={10}>
           {JSON.stringify(updates)}
         </Text>
         <Button title="Clear updates" onPress={clear} />
@@ -72,6 +94,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     rowGap: 20,
+    maxWidth: '100%',
+  },
+  containerButtons: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    columnGap: 20,
   },
 });
 

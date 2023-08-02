@@ -15,7 +15,9 @@ function App(props: {session: {login: string}}): JSX.Element {
   return (
     <SafeAreaView>
       <RandomNumberProvider>
-        {isAuthenticated && <Text>You are logged in</Text>}
+        {isAuthenticated && (
+          <Text aria-label="logged-in">You are logged in</Text>
+        )}
         <Main />
       </RandomNumberProvider>
     </SafeAreaView>
