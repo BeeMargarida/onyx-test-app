@@ -3,7 +3,6 @@ import {SafeAreaView, Text} from 'react-native';
 import {withOnyx} from 'react-native-onyx';
 import lodashGet from 'lodash/get';
 import Main from './Main';
-import {RandomNumberProvider} from './lib/providers';
 import ONYXKEYS from './keys';
 
 function App(props: {session: {login: string}}): JSX.Element {
@@ -14,12 +13,8 @@ function App(props: {session: {login: string}}): JSX.Element {
 
   return (
     <SafeAreaView>
-      <RandomNumberProvider>
-        {isAuthenticated && (
-          <Text aria-label="logged-in">You are logged in</Text>
-        )}
-        <Main />
-      </RandomNumberProvider>
+      {isAuthenticated && <Text aria-label="logged-in">You are logged in</Text>}
+      <Main />
     </SafeAreaView>
   );
 }
