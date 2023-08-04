@@ -62,6 +62,7 @@ function Main(props: {
         ) : (
           <Button title="Log In" onPress={onLogIn} />
         )}
+        <Text aria-label="data-number">{props.randomNumber?.number}</Text>
         <Text aria-label="data-pokedex">{props.pokedex?.pokemon.length}</Text>
         <Text aria-label="data-meteorites" numberOfLines={10}>
           {Object.entries(props.allMeteorites ?? {})
