@@ -37,7 +37,7 @@ test.describe('multiple tabs', () => {
     await expect(logOutButtonSecondPage).toBeTruthy();
     await expect(logOutButtonThirdPage).toBeTruthy();
 
-    const fetchSpaceDataButtonFirstPage = page.getByText('Fetch Spade Data');
+    const fetchSpaceDataButtonFirstPage = page.getByText('Fetch Space Data');
     const fetchSpaceDataButtonThirdPage =
       thirdPage.getByText('Fetch Space Data');
 
