@@ -37,11 +37,9 @@ test.describe('clear', () => {
 
     await page.reload();
 
-    // This will fail
     fetchMeteoritesData = page.getByLabel('data-meteorites');
-    expect(fetchMeteoritesData).not.toBeEmpty();
-
     fetchAsteroidsData = page.getByLabel('data-asteroids');
-    expect(fetchAsteroidsData).not.toBeEmpty();
+    await expect(fetchMeteoritesData).toBeEmpty();
+    await expect(fetchAsteroidsData).toBeEmpty();
   });
 });
