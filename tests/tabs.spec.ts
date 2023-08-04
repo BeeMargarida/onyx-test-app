@@ -16,7 +16,7 @@ test.describe('multiple tabs', () => {
     expect(logOutButtonSecondPage).toBeTruthy();
   });
 
-  test('fetch should stop after log out', async ({page, context}) => {
+  test('[FAILS] fetch should stop after log out', async ({page, context}) => {
     const secondPage = await context.newPage();
     const thirdPage = await context.newPage();
 
@@ -59,7 +59,7 @@ test.describe('multiple tabs', () => {
     expect(fetchSpaceDataThirdPage).toBeEmpty();
   });
 
-  test('should update in the same order between tabs', async ({
+  test('[FAILS] should update in the same order between tabs', async ({
     page,
     context,
   }) => {

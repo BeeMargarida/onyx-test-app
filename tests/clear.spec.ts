@@ -1,7 +1,7 @@
 import {test, expect} from '@playwright/test';
 
 test.describe('clear', () => {
-  test('clear data on logout', async ({page}) => {
+  test('[FAILS] clear data on logout', async ({page}) => {
     await page.goto('/');
 
     const logInButton = page.getByText('Log In');
