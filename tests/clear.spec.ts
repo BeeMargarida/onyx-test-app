@@ -1,7 +1,34 @@
 import {test, expect} from '@playwright/test';
 
 test.describe('clear', () => {
-  test('[FAILS] clear data on logout', async ({page}) => {
+  test('clear data on logout', async ({page}) => {
+    await page.goto('/');
+
+    const logInButton = page.getByText('Log In');
+    expect(logInButton).toBeTruthy();
+
+    await logInButton.click();
+
+    const logOutButton = page.getByText('Log Out');
+    expect(logOutButton).toBeTruthy();
+
+    const fetchPokedexButton = page.getByText('Fetch Pokedex');
+    expect(fetchPokedexButton).toBeTruthy();
+
+    await fetchPokedexButton.click();
+    const fetchPokedexData = page.getByLabel('data-pokedex');
+    expect(fetchPokedexData).toContainText('151');
+
+    await logOutButton.click();
+
+    expect(fetchPokedexData).toBeEmpty();
+
+    await page.reload();
+
+    expect(fetchPokedexData).toBeEmpty();
+  });
+
+  test('[FAILS] clear big amount of data on logout', async ({page}) => {
     await page.goto('/');
 
     const logInButton = page.getByText('Log In');
@@ -31,7 +58,8 @@ test.describe('clear', () => {
 
     await logOutButton.click();
 
-    expect(fetchPokedexData).toBeEmpty();
+    // wait for at least some of the clear to have been propagated
+    await expect(fetchPokedexData).toBeEmpty();
     expect(fetchMeteoritesData).toBeEmpty();
     expect(fetchAsteroidsData).toBeEmpty();
 

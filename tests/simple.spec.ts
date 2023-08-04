@@ -5,7 +5,6 @@ test.describe('simple', () => {
     await page.goto('/');
 
     const logInButton = page.getByText('Log In');
-
     expect(logInButton).toBeTruthy();
   });
 
