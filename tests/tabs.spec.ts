@@ -69,7 +69,7 @@ test.describe('multiple tabs', () => {
     let logInButton = page.getByText('Log In');
     await logInButton.click();
 
-    const fetchDataButton = page.getByText('Fetch Space data (small)');
+    const fetchDataButton = page.getByText('Fetch (small) Space data');
     await fetchDataButton.click();
 
     // Opens new page and reloads the first one

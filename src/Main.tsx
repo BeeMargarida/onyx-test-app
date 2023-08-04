@@ -54,7 +54,7 @@ function Main(props: {
                 onPress={() => onFetchSpaceData(false)}
               />
               <Button
-                title="Fetch Space data (small)"
+                title="Fetch (small) Space data"
                 onPress={() => onFetchSpaceData(true)}
               />
             </View>

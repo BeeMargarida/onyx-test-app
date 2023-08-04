@@ -33,7 +33,6 @@ Onyx.connect({
 
 const clear = () => {
   updates = [];
-  console.log('updates', updates);
 };
 
 export {updates, clear};
