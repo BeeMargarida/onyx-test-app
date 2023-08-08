@@ -50,21 +50,27 @@ function Main(props: {
         {isAuthenticated ? (
           <View style={styles.container}>
             <Text>{props.session.login}</Text>
-            <Button title="Log Out" onPress={onLogOut} />
+            <Button title="Log Out" testID="log-out" onPress={onLogOut} />
             <View style={styles.containerButtons}>
-              <Button title="Fetch Pokedex" onPress={onFetchPokedex} />
+              <Button
+                title="Fetch Pokedex"
+                testID="fetch-pokedex-data"
+                onPress={onFetchPokedex}
+              />
               <Button
                 title="Fetch Space data"
+                testID="fetch-space-data"
                 onPress={() => onFetchSpaceData(false)}
               />
               <Button
                 title="Fetch (small) Space data"
+                testID="fetch-small-space-data"
                 onPress={() => onFetchSpaceData(true)}
               />
             </View>
           </View>
         ) : (
-          <Button title="Log In" onPress={onLogIn} />
+          <Button title="Log In" testID="log-in" onPress={onLogIn} />
         )}
         <Text aria-label="data-number">{props.randomNumber?.number}</Text>
         <Text aria-label="data-pokedex">{props.pokedex?.pokemon.length}</Text>

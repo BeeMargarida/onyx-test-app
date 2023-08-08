@@ -4,20 +4,20 @@ test.describe('clear', () => {
   test('clear data on logout', async ({page}) => {
     await page.goto('/');
 
-    const logInButton = page.getByText('Log In');
+    const logInButton = page.getByTestId('log-in');
     expect(logInButton).toBeTruthy();
 
     await logInButton.click();
 
-    const logOutButton = page.getByText('Log Out');
+    const logOutButton = page.getByTestId('log-out');
     expect(logOutButton).toBeTruthy();
 
-    const fetchPokedexButton = page.getByText('Fetch Pokedex');
+    const fetchPokedexButton = page.getByTestId('fetch-pokedex-data');
     expect(fetchPokedexButton).toBeTruthy();
 
     await fetchPokedexButton.click();
     const fetchPokedexData = page.getByLabel('data-pokedex');
-    expect(fetchPokedexData).toContainText('151');
+    expect(fetchPokedexData).toHaveText('151');
 
     await logOutButton.click();
 
@@ -28,33 +28,33 @@ test.describe('clear', () => {
     expect(fetchPokedexData).toBeEmpty();
   });
 
-  test('[FAILS] clear big amount of data on logout', async ({page}) => {
+  test('[FIXED] clear big amount of data on logout', async ({page}) => {
     await page.goto('/');
 
-    const logInButton = page.getByText('Log In');
+    const logInButton = page.getByTestId('log-in');
     expect(logInButton).toBeTruthy();
 
     await logInButton.click();
 
-    const logOutButton = page.getByText('Log Out');
+    const logOutButton = page.getByTestId('log-out');
     expect(logOutButton).toBeTruthy();
 
-    const fetchPokedexButton = page.getByText('Fetch Pokedex');
+    const fetchPokedexButton = page.getByTestId('fetch-pokedex-data');
     expect(fetchPokedexButton).toBeTruthy();
 
-    const fetchMeteoritesButton = page.getByText('Fetch Space Data');
+    const fetchMeteoritesButton = page.getByTestId('fetch-space-data');
     expect(fetchMeteoritesButton).toBeTruthy();
 
     await fetchPokedexButton.click();
     const fetchPokedexData = page.getByLabel('data-pokedex');
-    expect(fetchPokedexData).toContainText('151');
+    expect(fetchPokedexData).toHaveText('151');
 
     await fetchMeteoritesButton.click();
     let fetchMeteoritesData = page.getByLabel('data-meteorites');
-    await expect(fetchMeteoritesData).not.toBeEmpty();
+    await expect(fetchMeteoritesData).toContainText('meteorites_');
 
     let fetchAsteroidsData = page.getByLabel('data-asteroids');
-    await expect(fetchAsteroidsData).not.toBeEmpty();
+    await expect(fetchAsteroidsData).toContainText('asteroids_');
 
     await logOutButton.click();
 

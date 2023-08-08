@@ -6,13 +6,13 @@ test.describe('multiple tabs', () => {
 
     await Promise.all([page.goto('/'), secondPage.goto('/')]);
 
-    const logInButton = page.getByText('Log In');
+    const logInButton = page.getByTestId('log-in');
     await logInButton.click();
 
-    const logOutButtonPage = page.getByText('Log Out');
+    const logOutButtonPage = page.getByTestId('log-out');
     expect(logOutButtonPage).toBeTruthy();
 
-    const logOutButtonSecondPage = secondPage.getByText('Log Out');
+    const logOutButtonSecondPage = secondPage.getByTestId('log-out');
     expect(logOutButtonSecondPage).toBeTruthy();
   });
 
@@ -29,17 +29,17 @@ test.describe('multiple tabs', () => {
     let logInButton = page.getByText('Log In');
     await logInButton.click();
 
-    const logOutButtonFirstPage = page.getByText('Log Out');
-    const logOutButtonSecondPage = secondPage.getByText('Log Out');
-    const logOutButtonThirdPage = thirdPage.getByText('Log Out');
+    const logOutButtonFirstPage = page.getByTestId('log-out');
+    const logOutButtonSecondPage = secondPage.getByTestId('log-out');
+    const logOutButtonThirdPage = thirdPage.getByTestId('log-out');
 
     expect(logOutButtonFirstPage).toBeTruthy();
     expect(logOutButtonSecondPage).toBeTruthy();
     expect(logOutButtonThirdPage).toBeTruthy();
 
-    const fetchSpaceDataButtonFirstPage = page.getByText('Fetch Space Data');
+    const fetchSpaceDataButtonFirstPage = page.getByTestId('fetch-space-data');
     const fetchSpaceDataButtonThirdPage =
-      thirdPage.getByText('Fetch Space Data');
+      thirdPage.getByTestId('fetch-space-data');
 
     await Promise.all([
       logOutButtonSecondPage.click(),
@@ -47,22 +47,28 @@ test.describe('multiple tabs', () => {
       fetchSpaceDataButtonThirdPage.click(),
     ]);
 
-    logInButton = page.getByText('Log In');
+    logInButton = page.getByTestId('log-in');
     expect(logInButton).toBeTruthy();
 
     let fetchSpaceDataFirstPage = page.getByLabel('data-meteorites');
     let fetchSpaceDataThirdPage = thirdPage.getByLabel('data-meteorites');
 
-    await expect(fetchSpaceDataFirstPage).not.toBeEmpty();
-    await expect(fetchSpaceDataThirdPage).not.toBeEmpty();
+    await expect(fetchSpaceDataFirstPage).toContainText('meteorites_');
+    await expect(fetchSpaceDataThirdPage).toContainText('meteorites_');
 
     await Promise.all([page.reload(), thirdPage.reload()]);
 
-    // This sometimes fails
+    const logInButtonFirstPage = page.getByTestId('log-in');
+    const logInButtonThirdPage = thirdPage.getByTestId('log-in');
+    await expect(logInButtonFirstPage).toBeTruthy();
+    await expect(logInButtonThirdPage).toBeTruthy();
+
     fetchSpaceDataFirstPage = page.getByLabel('data-meteorites');
     fetchSpaceDataThirdPage = thirdPage.getByLabel('data-meteorites');
-    expect(fetchSpaceDataFirstPage).toBeEmpty();
-    expect(fetchSpaceDataThirdPage).toBeEmpty();
+
+    // This sometimes fails
+    await expect(fetchSpaceDataFirstPage).toBeEmpty();
+    await expect(fetchSpaceDataThirdPage).toBeEmpty();
   });
 
   test('[FAILS] should update in the same order between tabs', async ({
@@ -72,10 +78,10 @@ test.describe('multiple tabs', () => {
     await page.goto('/');
 
     // Logs in and fetches data
-    let logInButton = page.getByText('Log In');
+    let logInButton = page.getByTestId('log-in');
     await logInButton.click();
 
-    const fetchDataButton = page.getByText('Fetch (small) Space data');
+    const fetchDataButton = page.getByTestId('fetch-small-space-data');
     await fetchDataButton.click();
 
     const fetchSpaceDataFirstPage = page.getByLabel('data-meteorites');
@@ -89,14 +95,17 @@ test.describe('multiple tabs', () => {
     let updatesFirstPage = page.getByLabel('data-updates');
     let updatesSecondPage = secondPage.getByLabel('data-updates');
 
-    expect(updatesFirstPage.innerText).toEqual(updatesSecondPage.innerText);
+    let updatesFirstPageText = await updatesFirstPage.innerText();
+    let updatesSecondPageText = await updatesFirstPage.innerText();
 
-    const logOutButtonSecondPage = secondPage.getByText('Log Out');
+    expect(updatesFirstPageText).toEqual(updatesSecondPageText);
+
+    const logOutButtonSecondPage = secondPage.getByTestId('log-out');
     await expect(logOutButtonSecondPage).toBeTruthy();
     await logOutButtonSecondPage.click();
 
-    const logInButtonFirstPage = page.getByText('Log In');
-    const logInButtonSecondPage = secondPage.getByText('Log In');
+    const logInButtonFirstPage = page.getByTestId('log-in');
+    const logInButtonSecondPage = secondPage.getByTestId('log-in');
 
     await expect(logInButtonFirstPage).toBeTruthy();
     await expect(logInButtonSecondPage).toBeTruthy();
