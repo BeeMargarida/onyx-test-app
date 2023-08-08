@@ -33,9 +33,9 @@ test.describe('multiple tabs', () => {
     const logOutButtonSecondPage = secondPage.getByText('Log Out');
     const logOutButtonThirdPage = thirdPage.getByText('Log Out');
 
-    await expect(logOutButtonFirstPage).toBeTruthy();
-    await expect(logOutButtonSecondPage).toBeTruthy();
-    await expect(logOutButtonThirdPage).toBeTruthy();
+    expect(logOutButtonFirstPage).toBeTruthy();
+    expect(logOutButtonSecondPage).toBeTruthy();
+    expect(logOutButtonThirdPage).toBeTruthy();
 
     const fetchSpaceDataButtonFirstPage = page.getByText('Fetch Space Data');
     const fetchSpaceDataButtonThirdPage =
@@ -50,11 +50,17 @@ test.describe('multiple tabs', () => {
     logInButton = page.getByText('Log In');
     expect(logInButton).toBeTruthy();
 
+    let fetchSpaceDataFirstPage = page.getByLabel('data-meteorites');
+    let fetchSpaceDataThirdPage = thirdPage.getByLabel('data-meteorites');
+
+    await expect(fetchSpaceDataFirstPage).not.toBeEmpty();
+    await expect(fetchSpaceDataThirdPage).not.toBeEmpty();
+
     await Promise.all([page.reload(), thirdPage.reload()]);
 
     // This sometimes fails
-    const fetchSpaceDataFirstPage = page.getByLabel('data-meteorites');
-    const fetchSpaceDataThirdPage = thirdPage.getByLabel('data-meteorites');
+    fetchSpaceDataFirstPage = page.getByLabel('data-meteorites');
+    fetchSpaceDataThirdPage = thirdPage.getByLabel('data-meteorites');
     expect(fetchSpaceDataFirstPage).toBeEmpty();
     expect(fetchSpaceDataThirdPage).toBeEmpty();
   });
@@ -71,6 +77,9 @@ test.describe('multiple tabs', () => {
 
     const fetchDataButton = page.getByText('Fetch (small) Space data');
     await fetchDataButton.click();
+
+    const fetchSpaceDataFirstPage = page.getByLabel('data-meteorites');
+    await expect(fetchSpaceDataFirstPage).not.toBeEmpty();
 
     // Opens new page and reloads the first one
     const secondPage = await context.newPage();

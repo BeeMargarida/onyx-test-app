@@ -51,10 +51,10 @@ test.describe('clear', () => {
 
     await fetchMeteoritesButton.click();
     let fetchMeteoritesData = page.getByLabel('data-meteorites');
-    expect(fetchMeteoritesData).not.toBeEmpty();
+    await expect(fetchMeteoritesData).not.toBeEmpty();
 
     let fetchAsteroidsData = page.getByLabel('data-asteroids');
-    expect(fetchAsteroidsData).not.toBeEmpty();
+    await expect(fetchAsteroidsData).not.toBeEmpty();
 
     await logOutButton.click();
 
