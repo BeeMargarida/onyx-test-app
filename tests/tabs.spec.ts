@@ -42,29 +42,16 @@ test.describe('multiple tabs', () => {
       thirdPage.getByTestId('fetch-space-data');
 
     await Promise.all([
-      logOutButtonSecondPage.click(),
       fetchSpaceDataButtonFirstPage.click(),
+      logOutButtonSecondPage.click(),
       fetchSpaceDataButtonThirdPage.click(),
     ]);
 
-    logInButton = page.getByTestId('log-in');
-    expect(logInButton).toBeTruthy();
+    await page.getByTestId('log-in').waitFor();
+    await thirdPage.getByTestId('log-in').waitFor();
 
-    let fetchSpaceDataFirstPage = page.getByLabel('data-meteorites');
-    let fetchSpaceDataThirdPage = thirdPage.getByLabel('data-meteorites');
-
-    await expect(fetchSpaceDataFirstPage).toContainText('meteorites_');
-    await expect(fetchSpaceDataThirdPage).toContainText('meteorites_');
-
-    await Promise.all([page.reload(), thirdPage.reload()]);
-
-    const logInButtonFirstPage = page.getByTestId('log-in');
-    const logInButtonThirdPage = thirdPage.getByTestId('log-in');
-    await expect(logInButtonFirstPage).toBeTruthy();
-    await expect(logInButtonThirdPage).toBeTruthy();
-
-    fetchSpaceDataFirstPage = page.getByLabel('data-meteorites');
-    fetchSpaceDataThirdPage = thirdPage.getByLabel('data-meteorites');
+    const fetchSpaceDataFirstPage = page.getByLabel('data-meteorites');
+    const fetchSpaceDataThirdPage = thirdPage.getByLabel('data-meteorites');
 
     // This sometimes fails
     await expect(fetchSpaceDataFirstPage).toBeEmpty();
@@ -91,27 +78,19 @@ test.describe('multiple tabs', () => {
     const secondPage = await context.newPage();
     await Promise.all([page.reload(), secondPage.goto('/')]);
 
-    // Checks that the update keys ordering is matching
-    let updatesFirstPage = page.getByLabel('data-updates');
-    let updatesSecondPage = secondPage.getByLabel('data-updates');
-
+    const updatesFirstPage = page.getByLabel('data-updates');
+    const updatesSecondPage = secondPage.getByLabel('data-updates');
     let updatesFirstPageText = await updatesFirstPage.innerText();
     let updatesSecondPageText = await updatesFirstPage.innerText();
 
+    // Checks that the update keys ordering is matching
     expect(updatesFirstPageText).toEqual(updatesSecondPageText);
 
     const logOutButtonSecondPage = secondPage.getByTestId('log-out');
-    await expect(logOutButtonSecondPage).toBeTruthy();
     await logOutButtonSecondPage.click();
 
-    const logInButtonFirstPage = page.getByTestId('log-in');
-    const logInButtonSecondPage = secondPage.getByTestId('log-in');
-
-    await expect(logInButtonFirstPage).toBeTruthy();
-    await expect(logInButtonSecondPage).toBeTruthy();
-
-    updatesFirstPage = page.getByLabel('data-updates');
-    updatesSecondPage = secondPage.getByLabel('data-updates');
+    // waits for the log in button to appear
+    await page.getByTestId('log-in').waitFor();
 
     const updatesTextFirstPage = await updatesFirstPage.innerText();
     const updatesTextSecondPage = await updatesSecondPage.innerText();

@@ -16,8 +16,8 @@ test.describe('clear', () => {
     expect(fetchPokedexButton).toBeTruthy();
 
     await fetchPokedexButton.click();
-    const fetchPokedexData = page.getByLabel('data-pokedex');
-    expect(fetchPokedexData).toHaveText('151');
+    let fetchPokedexData = page.getByLabel('data-pokedex');
+    await expect(fetchPokedexData).toHaveText('151');
 
     await logOutButton.click();
 
@@ -25,7 +25,7 @@ test.describe('clear', () => {
 
     await page.reload();
 
-    expect(fetchPokedexData).toBeEmpty();
+    await expect(fetchPokedexData).toBeEmpty();
   });
 
   test('[FIXED] clear big amount of data on logout', async ({page}) => {

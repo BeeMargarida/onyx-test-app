@@ -17,12 +17,12 @@ test.describe('simple', () => {
     const logOutButton = page.getByTestId('log-out');
     const numberElement = page.getByLabel('data-number');
 
-    expect(logOutButton).toBeTruthy();
+    await expect(logOutButton).toBeTruthy();
     expect(numberElement).toBeTruthy();
 
     const updatesTextElement = page.getByLabel('data-updates');
     // eslint-disable-next-line quotes, prettier/prettier
-    expect(updatesTextElement).toHaveText("[\"session\",\"randomNumber\"]");
+    await expect(updatesTextElement).toHaveText("[\"session\",\"randomNumber\"]");
   });
 
   test('logs out in after clicking button', async ({page}) => {
@@ -41,8 +41,9 @@ test.describe('simple', () => {
     expect(updatesTextElement).toHaveText("[\"session\",\"randomNumber\"]");
 
     await logOutButton.click();
-    expect(logInButton).toBeTruthy();
-    expect(updatesTextElement).toHaveText(
+
+    await expect(logInButton).toBeTruthy();
+    await expect(updatesTextElement).toHaveText(
       // eslint-disable-next-line quotes, prettier/prettier
       "[\"session\",\"randomNumber\",\"session\",\"randomNumber\"]",
     );
