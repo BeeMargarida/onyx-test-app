@@ -49,13 +49,10 @@ function Main(props: {
   const onFetchSpaceData = (small?: boolean) => {
     const date = Date.now();
 
-    // Timeout to simulate network delays
-    setTimeout(() => {
-      for (let i = 0; i <= (small ? 10 : 100); i++) {
-        Onyx.merge(`${ONYXKEYS.COLLECTION.METEORITES}${date}${i}`, meteorites);
-        Onyx.merge(`${ONYXKEYS.COLLECTION.ASTEROIDS}${date}${i}`, asteroids);
-      }
-    }, 100);
+    for (let i = 0; i <= (small ? 10 : 100); i++) {
+      Onyx.merge(`${ONYXKEYS.COLLECTION.METEORITES}${date}${i}`, meteorites);
+      Onyx.merge(`${ONYXKEYS.COLLECTION.ASTEROIDS}${date}${i}`, asteroids);
+    }
   };
 
   return (
