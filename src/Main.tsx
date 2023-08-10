@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {Button, SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import lodashGet from 'lodash/get';
 import Onyx, {withOnyx} from 'react-native-onyx';
@@ -13,10 +13,24 @@ function Main(props: {
   allMeteorites: {[key: string]: Array<unknown>};
   allAsteroids: {[key: string]: Array<unknown>};
 }): JSX.Element {
+  const [isLeader, setIsLeader] = useState(
+    Onyx.isClientTheLeader ? Onyx.isClientTheLeader() : false,
+  );
+
   const isAuthenticated = useMemo(
     () => Boolean(lodashGet(props.session, 'login', null)),
     [props.session],
   );
+
+  useEffect(() => {
+    if (!Onyx.subscribeToClientChange) {
+      return;
+    }
+
+    Onyx.subscribeToClientChange(() => {
+      setIsLeader(Onyx.isClientTheLeader());
+    });
+  }, []);
 
   const onLogIn = () => {
     clear();
@@ -72,6 +86,7 @@ function Main(props: {
         ) : (
           <Button title="Log In" testID="log-in" onPress={onLogIn} />
         )}
+        <Text aria-label="leader">{isLeader ? 'leader' : 'non-leader'}</Text>
         <Text aria-label="data-number">{props.randomNumber?.number}</Text>
         <Text aria-label="data-pokedex">{props.pokedex?.pokemon.length}</Text>
         <Text aria-label="data-meteorites" numberOfLines={10}>

@@ -98,4 +98,57 @@ test.describe('multiple tabs', () => {
     // This should fail
     expect(updatesTextFirstPage).toEqual(updatesTextSecondPage);
   });
+
+  test('[POC] updates the leader tab when tabs are closed', async ({
+    page,
+    context,
+  }) => {
+    const secondPage = await context.newPage();
+    const thirdPage = await context.newPage();
+
+    await page.goto('/');
+    await secondPage.goto('/');
+    await thirdPage.goto('/');
+
+    await expect(page.getByLabel('leader')).toHaveText('non-leader');
+    await expect(secondPage.getByLabel('leader')).toHaveText('non-leader');
+    await expect(thirdPage.getByLabel('leader')).toHaveText('leader');
+
+    await Promise.all([
+      secondPage.close({runBeforeUnload: true}),
+      thirdPage.close({runBeforeUnload: true}),
+    ]);
+
+    // wait for the change propagate
+    await page.getByLabel('leader').waitFor();
+
+    await expect(page.getByLabel('leader')).toHaveText('leader');
+  });
+
+  test('[POC] should still execute updates to the data after closing the leader tab', async ({
+    page,
+    context,
+  }) => {
+    await page.goto('/');
+
+    const secondPage = await context.newPage();
+    const thirdPage = await context.newPage();
+
+    // force the third page to be the leader
+    await secondPage.goto('/');
+    await thirdPage.goto('/');
+
+    await page.getByTestId('log-in').click();
+
+    expect(page.getByTestId('log-out')).toBeTruthy();
+    expect(secondPage.getByTestId('log-out')).toBeTruthy();
+    expect(thirdPage.getByTestId('log-out')).toBeTruthy();
+
+    thirdPage.close({runBeforeUnload: true});
+
+    await page.getByTestId('log-out').click();
+
+    expect(page.getByTestId('log-in')).toBeTruthy();
+    expect(secondPage.getByTestId('log-in')).toBeTruthy();
+  });
 });

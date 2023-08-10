@@ -16,25 +16,22 @@ test.describe('clear', () => {
     expect(fetchPokedexButton).toBeTruthy();
 
     await fetchPokedexButton.click();
-    let fetchPokedexData = page.getByLabel('data-pokedex');
-    await expect(fetchPokedexData).toHaveText('151');
+    await expect(page.getByLabel('data-pokedex')).toHaveText('151');
 
     await logOutButton.click();
 
-    expect(fetchPokedexData).toBeEmpty();
+    await expect(page.getByLabel('data-pokedex')).toBeEmpty();
 
     await page.reload();
 
-    await expect(fetchPokedexData).toBeEmpty();
+    await expect(page.getByLabel('data-pokedex')).toBeEmpty();
   });
 
-  test('[FIXED] clear big amount of data on logout', async ({page}) => {
+  test('clear big amount of data on logout', async ({page}) => {
     await page.goto('/');
 
-    const logInButton = page.getByTestId('log-in');
-    expect(logInButton).toBeTruthy();
-
-    await logInButton.click();
+    expect(page.getByTestId('log-in')).toBeTruthy();
+    await page.getByTestId('log-in').click();
 
     const logOutButton = page.getByTestId('log-out');
     expect(logOutButton).toBeTruthy();
@@ -50,10 +47,10 @@ test.describe('clear', () => {
     expect(fetchPokedexData).toHaveText('151');
 
     await fetchMeteoritesButton.click();
-    let fetchMeteoritesData = page.getByLabel('data-meteorites');
+    const fetchMeteoritesData = page.getByLabel('data-meteorites');
     await expect(fetchMeteoritesData).toContainText('meteorites_');
 
-    let fetchAsteroidsData = page.getByLabel('data-asteroids');
+    const fetchAsteroidsData = page.getByLabel('data-asteroids');
     await expect(fetchAsteroidsData).toContainText('asteroids_');
 
     await logOutButton.click();
@@ -65,8 +62,6 @@ test.describe('clear', () => {
 
     await page.reload();
 
-    fetchMeteoritesData = page.getByLabel('data-meteorites');
-    fetchAsteroidsData = page.getByLabel('data-asteroids');
     await expect(fetchMeteoritesData).toBeEmpty();
     await expect(fetchAsteroidsData).toBeEmpty();
   });
