@@ -3,8 +3,11 @@ import {test, expect} from '@playwright/test';
 test.describe('multiple tabs', () => {
   test('logs in in all tabs', async ({page, context}) => {
     const secondPage = await context.newPage();
+    const thirdPage = await context.newPage();
 
-    await Promise.all([page.goto('/'), secondPage.goto('/')]);
+    await page.goto('/');
+    await secondPage.goto('/');
+    await thirdPage.goto('/');
 
     const logInButton = page.getByTestId('log-in');
     await logInButton.click();
@@ -14,6 +17,9 @@ test.describe('multiple tabs', () => {
 
     const logOutButtonSecondPage = secondPage.getByTestId('log-out');
     expect(logOutButtonSecondPage).toBeTruthy();
+
+    const logOutButtonThirdPage = thirdPage.getByTestId('log-out');
+    expect(logOutButtonThirdPage).toBeTruthy();
   });
 
   test('[FAILS] fetch should stop after log out', async ({page, context}) => {
@@ -58,25 +64,21 @@ test.describe('multiple tabs', () => {
     await expect(fetchSpaceDataThirdPage).toBeEmpty();
   });
 
-  test('[FAILS] should update in the same order between tabs', async ({
+  test('should update in the same order between tabs', async ({
     page,
     context,
   }) => {
     await page.goto('/');
 
-    // Logs in and fetches data
-    let logInButton = page.getByTestId('log-in');
-    await logInButton.click();
+    await page.getByTestId('log-in').click();
+    await page.getByTestId('fetch-small-space-data').click();
 
-    const fetchDataButton = page.getByTestId('fetch-small-space-data');
-    await fetchDataButton.click();
-
-    const fetchSpaceDataFirstPage = page.getByLabel('data-meteorites');
-    await expect(fetchSpaceDataFirstPage).not.toBeEmpty();
+    await expect(page.getByLabel('data-meteorites')).not.toBeEmpty();
 
     // Opens new page and reloads the first one
     const secondPage = await context.newPage();
-    await Promise.all([page.reload(), secondPage.goto('/')]);
+    await page.reload();
+    await secondPage.goto('/');
 
     const updatesFirstPage = page.getByLabel('data-updates');
     const updatesSecondPage = secondPage.getByLabel('data-updates');
@@ -90,7 +92,7 @@ test.describe('multiple tabs', () => {
     await logOutButtonSecondPage.click();
 
     // waits for the log in button to appear
-    await page.getByTestId('log-in').waitFor();
+    await page.getByTestId('log-in').waitFor({state: 'visible'});
 
     const updatesTextFirstPage = await updatesFirstPage.innerText();
     const updatesTextSecondPage = await updatesSecondPage.innerText();
