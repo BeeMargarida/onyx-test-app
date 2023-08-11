@@ -5,5 +5,10 @@ This application serves as a simple web app with e2e tests that showcases some o
 ## How to run:
 
 1. Use node `16.15.1`
-2. `npm i`
-3. `npm run e2e` or `npm run e2e-ui`
+2. `yarn`
+3. `yarn e2e` or `yarn e2e-ui`
+
+## Debugging e2e tests
+
+- Use the Playwright VSCode extension
+- Use the command `npx playwright test <name of the test file> --project=chromium --debug`
