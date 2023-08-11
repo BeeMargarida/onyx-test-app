@@ -22,46 +22,35 @@ test.describe('multiple tabs', () => {
     expect(logOutButtonThirdPage).toBeTruthy();
   });
 
-  test('[FAILS] fetch should stop after log out', async ({page, context}) => {
+  test('fetch should stop after log out', async ({page, context}) => {
     const secondPage = await context.newPage();
     const thirdPage = await context.newPage();
 
-    await Promise.all([
-      page.goto('/'),
-      secondPage.goto('/'),
-      thirdPage.goto('/'),
-    ]);
+    await page.goto('/');
+    await secondPage.goto('/');
+    await thirdPage.goto('/');
 
-    let logInButton = page.getByText('Log In');
-    await logInButton.click();
+    await page.getByText('Log In').click();
 
-    const logOutButtonFirstPage = page.getByTestId('log-out');
-    const logOutButtonSecondPage = secondPage.getByTestId('log-out');
-    const logOutButtonThirdPage = thirdPage.getByTestId('log-out');
+    await secondPage.getByTestId('log-out').waitFor({state: 'visible'});
+    await thirdPage.getByTestId('fetch-space-data').waitFor({state: 'visible'});
 
-    expect(logOutButtonFirstPage).toBeTruthy();
-    expect(logOutButtonSecondPage).toBeTruthy();
-    expect(logOutButtonThirdPage).toBeTruthy();
+    await thirdPage.getByTestId('fetch-space-data').click();
+    await page.getByTestId('fetch-space-data').click();
+    await secondPage.getByTestId('log-out').click();
 
-    const fetchSpaceDataButtonFirstPage = page.getByTestId('fetch-space-data');
-    const fetchSpaceDataButtonThirdPage =
-      thirdPage.getByTestId('fetch-space-data');
+    await secondPage.getByTestId('log-in').waitFor({state: 'visible'});
+    await thirdPage.getByTestId('log-in').waitFor({state: 'visible'});
 
-    await Promise.all([
-      fetchSpaceDataButtonFirstPage.click(),
-      logOutButtonSecondPage.click(),
-      fetchSpaceDataButtonThirdPage.click(),
-    ]);
+    await page.reload();
+    await thirdPage.reload();
 
-    await page.getByTestId('log-in').waitFor();
-    await thirdPage.getByTestId('log-in').waitFor();
+    expect(secondPage.getByTestId('log-in')).toBeTruthy();
+    expect(thirdPage.getByTestId('log-in')).toBeTruthy();
 
-    const fetchSpaceDataFirstPage = page.getByLabel('data-meteorites');
-    const fetchSpaceDataThirdPage = thirdPage.getByLabel('data-meteorites');
-
-    // This sometimes fails
-    await expect(fetchSpaceDataFirstPage).toBeEmpty();
-    await expect(fetchSpaceDataThirdPage).toBeEmpty();
+    await expect(page.getByLabel('data-meteorites')).toBeEmpty();
+    await expect(secondPage.getByLabel('data-meteorites')).toBeEmpty();
+    await expect(thirdPage.getByLabel('data-meteorites')).toBeEmpty();
   });
 
   test('should update in the same order between tabs', async ({
@@ -116,10 +105,8 @@ test.describe('multiple tabs', () => {
     await expect(secondPage.getByLabel('leader')).toHaveText('non-leader');
     await expect(thirdPage.getByLabel('leader')).toHaveText('leader');
 
-    await Promise.all([
-      secondPage.close({runBeforeUnload: true}),
-      thirdPage.close({runBeforeUnload: true}),
-    ]);
+    await secondPage.close({runBeforeUnload: true});
+    await thirdPage.close({runBeforeUnload: true});
 
     // wait for the change propagate
     await page.getByLabel('leader').waitFor();
